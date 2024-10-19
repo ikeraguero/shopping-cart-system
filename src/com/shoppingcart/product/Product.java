@@ -1,19 +1,24 @@
 package com.shoppingcart.product;
 
+import com.shoppingcart.stock.Stock;
+
 public abstract class Product {
-    private String name;
-    private double basePrice;
+    private final String name;
+    private final double basePrice;
     private double finalPrice;
     private String category;
-    private boolean isOnSale;
-    private int discountPercentage;
+    private final boolean isOnSale;
+    private final int discountPercentage;
+    private int inventory;
 
-    public Product(String name, double basePrice, String category, boolean isOnSale, int discountPercentage) {
+    public Product(String name, double basePrice, boolean isOnSale, int discountPercentage, int inventory) {
         this.name = name;
         this.basePrice = basePrice;
-        this.category = category;
+        this.category = getClass().getName().toLowerCase();
         this.isOnSale = isOnSale;
         this.discountPercentage = discountPercentage;
+        this.inventory = inventory;
+        Stock.addNewItemToStock(name, inventory);
     }
 
     public double getBasePrice() {
@@ -22,6 +27,14 @@ public abstract class Product {
 
     public int getDiscountPercentage() {
         return discountPercentage;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getFinalPrice() {
+        return finalPrice;
     }
 
     public boolean isOnSale() {
