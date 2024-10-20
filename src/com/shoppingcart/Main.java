@@ -89,7 +89,7 @@ public class Main {
                                 Stock.addItemStock(grocery);
                                 count++;
                             } while (count < inventory);
-                            Stock.printStock();
+                            Stock.printStock(0);
                             break;
                         case 2:
                             count = 0;
@@ -98,7 +98,7 @@ public class Main {
                                 Stock.addItemStock(electronics);
                                 count++;
                             } while (count < inventory);
-                            Stock.printStock();
+                            Stock.printStock(0);
                             break;
                         case 3:
                             count = 0;
@@ -107,7 +107,7 @@ public class Main {
                                 Stock.addItemStock(clothing);
                                 count++;
                             } while (count < inventory);
-                            Stock.printStock();
+                            Stock.printStock(0);
                             break;
                     }
                     System.out.print("\n: ");
@@ -125,13 +125,22 @@ public class Main {
                     }
                         Stock.removeItemStock(productName, deletionOption);
                         System.out.println("Item successfully removed!");
-                        Stock.printStock();
+                        System.out.println(Stock.groceriesList);
+                        Stock.printStock(0);
                         break;
                     }
+                    System.out.println(Stock.groceriesList);
                     System.out.println("Item not found in stock!");// TO-DO : implements deletion
                     break;
                 case 3:
-                    Stock.printStock();
+                    int sortOption = 0;
+                    while(sortOption==0 || sortOption > 2) {
+                        System.out.print("\n[1] - Sort by Name\n");
+                        System.out.print("[2] - Sort by Price\n");
+                        System.out.print("Enter your choice: ");
+                        sortOption = Integer.parseInt(scanner.next());
+                    }
+                    Stock.printStock(sortOption);
                     break;
                 case 4:
                     System.out.println("Item name: ");

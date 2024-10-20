@@ -5,7 +5,7 @@ public class Electronics extends Product{
     private static final double warrantyPrice = 300.00;
 
     public Electronics(String name, double basePrice, boolean isOnSale, int discountPercentage, boolean hasWarranty, int inventory) {
-        super(name, basePrice, isOnSale, discountPercentage, inventory);
+        super(name, basePrice, isOnSale, discountPercentage, inventory, "electronics");
         this.hasWarranty = hasWarranty;
         this.calculatePrice();
     }

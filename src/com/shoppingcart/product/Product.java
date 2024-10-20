@@ -9,13 +9,13 @@ public abstract class Product {
     private final int discountPercentage;
     private int inventory;
 
-    public Product(String name, double basePrice, boolean isOnSale, int discountPercentage, int inventory) {
+    public Product(String name, double basePrice, boolean isOnSale, int discountPercentage, int inventory, String category) {
         this.name = name;
         this.basePrice = basePrice;
-        this.category = getClass().getName().toLowerCase();
         this.isOnSale = isOnSale;
         this.discountPercentage = discountPercentage;
         this.inventory = inventory;
+        this.category = category;
     }
 
     public double getBasePrice() {
@@ -34,6 +34,10 @@ public abstract class Product {
         return finalPrice;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
     public boolean isOnSale() {
         return isOnSale;
     }
@@ -45,8 +49,7 @@ public abstract class Product {
     @Override
     public String toString() {
         return """
-                Product: %s
-                Total Price: R$%.2f
+                %-20sR$%.2f
                 """.formatted(name, finalPrice);
     }
 
