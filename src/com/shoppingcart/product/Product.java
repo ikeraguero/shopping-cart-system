@@ -1,7 +1,5 @@
 package com.shoppingcart.product;
 
-import com.shoppingcart.stock.Stock;
-
 public abstract class Product {
     private final String name;
     private final double basePrice;
@@ -18,7 +16,6 @@ public abstract class Product {
         this.isOnSale = isOnSale;
         this.discountPercentage = discountPercentage;
         this.inventory = inventory;
-        Stock.addNewItemToStock(name, inventory);
     }
 
     public double getBasePrice() {
@@ -56,5 +53,5 @@ public abstract class Product {
     public abstract void calculatePrice();
 
 
-
+    public abstract boolean hasWarranty();
 }

@@ -10,6 +10,10 @@ public class Electronics extends Product{
         this.calculatePrice();
     }
 
+    public boolean hasWarranty() {
+        return hasWarranty;
+    }
+
     public void calculatePrice() {
             setFinalPrice((getBasePrice()) - (getBasePrice() * getDiscountPercentage()) + (hasWarranty ? warrantyPrice : 0));
     }

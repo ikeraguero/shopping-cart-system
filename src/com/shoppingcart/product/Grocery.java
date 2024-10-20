@@ -11,4 +11,9 @@ public class Grocery extends Product{
         setFinalPrice(getBasePrice() - (isOnSale() ? getBasePrice() * getDiscountPercentage()/100 : 0));
     }
 
+    @Override
+    public boolean hasWarranty() {
+        return false;
+    }
+
 }
