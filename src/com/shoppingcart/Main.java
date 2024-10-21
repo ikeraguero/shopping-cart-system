@@ -125,11 +125,9 @@ public class Main {
                     }
                         Stock.removeItemStock(productName, deletionOption);
                         System.out.println("Item successfully removed!");
-                        System.out.println(Stock.groceriesList);
                         Stock.printStock(0);
                         break;
                     }
-                    System.out.println(Stock.groceriesList);
                     System.out.println("Item not found in stock!");// TO-DO : implements deletion
                     break;
                 case 3:
@@ -143,8 +141,10 @@ public class Main {
                     Stock.printStock(sortOption);
                     break;
                 case 4:
+                    String itemName;
                     System.out.println("Item name: ");
-
+                    itemName = scanner.next().toUpperCase();
+                    Stock.searchItem(itemName);
                     break;
                 case 5:
 

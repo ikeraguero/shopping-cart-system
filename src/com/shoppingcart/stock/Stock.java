@@ -5,6 +5,7 @@ import com.shoppingcart.product.Product;
 import java.util.*;
 
 public class Stock {
+    public static final HashMap<String, Integer> productQuantity = new HashMap<>();
     private static final List<Product> stock = new LinkedList<>();
     public static final List<Product> groceriesList = new LinkedList<>();
     private static final List<Product> electronicsList = new LinkedList<>();
@@ -27,6 +28,7 @@ public class Stock {
                 clothingList.add(item);
                 break;
         }
+        calculateQuantity();
     }
 
     private static void removeSingleItem(List<Product> list, String name) {
@@ -82,8 +84,8 @@ public class Stock {
                         break;
                 }
                 break;
-
         }
+        calculateQuantity();
     }
 
     public static boolean hasItem(String name) {
@@ -104,20 +106,63 @@ public class Stock {
         return null;
     }
 
+    private static void calculateQuantity() {
+        for (List<Product> list : Stock.listLists) {
+            if (list.isEmpty()) continue;
+            HashMap<String, Product> productMap = new HashMap<>();
+            for (Product item : list) {
+                if (!productMap.containsKey(item.getName())) {
+                    int productCount = 0;
+                    productMap.put(item.getName(), item);
+                    for (Product itemList : list) {
+                        if (itemList.getName().equals(item.getName())) {
+                            productCount++;
+                        }
+                    }
+                    productQuantity.put(item.getName(), productCount);
+                }
+            }
+        }
+    }
+
     private static void printSortedStock() {
         for (List<Product> list: Stock.listLists) {
-        int productCount = 0;
             if(list.isEmpty()) continue;
+            System.out.println();
             System.out.println(list.getFirst().getCategory().toUpperCase());
             HashMap<String, Product> productMap = new HashMap<>();
             for(Product item : list) {
-                productMap.putIfAbsent(item.getName(), item);
-                productCount++;
+                    if(!productMap.containsKey(item.getName())) {
+                        int productCount = 0;
+                        productMap.put(item.getName(), item);
+                        for(Product itemList : list) {
+                            if(itemList.getName().equals(item.getName())) {
+                                productCount++;
+                            }
+                        }
+                        System.out.printf("%-20sR$%.2f (%d %s)\n", item.getName(), item.getFinalPrice(), productCount, productCount > 1 ? "units" : "unit");
+                    }
+                /// FIND THE PRODUCT COUNT
             }
-            for(Product item : productMap.values()) {
-                System.out.printf("%-20sR$%.2f (%d %s)\n", item.getName(), item.getFinalPrice(), productCount, productCount > 1 ? "units" : "unit");
+//            for(Product item : list) {
+//                if(productMap.containsKey(item.getName())) continue;
+//                productMap.put(item.getName(), item);
+//                System.out.printf("%-20sR$%.2f (%d %s)\n", item.getName(), item.getFinalPrice(), productCount, productCount > 1 ? "units" : "unit");
+//
+//            }
+        }
+    }
+
+    public static void searchItem(String itemName){
+        for(Product item : stock) {
+            if(item.getName().equals(itemName)) {
+                int quantity = productQuantity.get(itemName);
+                System.out.println("Item found!");
+                System.out.printf("%-20sR$%.2f (%d %s)\n", item.getName(), item.getFinalPrice(), quantity, quantity > 1 ? "units" : "unit");
+                return;
             }
         }
+        System.out.println("Item not found!");
     }
 
     public static void printStock(int sortType) {

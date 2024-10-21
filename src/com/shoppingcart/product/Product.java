@@ -38,6 +38,14 @@ public abstract class Product {
         return category;
     }
 
+    public int getInventory() {
+        return inventory;
+    }
+
+    public void setInventory(int inventory) {
+        this.inventory = inventory;
+    }
+
     public boolean isOnSale() {
         return isOnSale;
     }
