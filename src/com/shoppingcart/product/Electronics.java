@@ -15,6 +15,6 @@ public class Electronics extends Product{
     }
 
     public void calculatePrice() {
-            setFinalPrice((getBasePrice()) - (getBasePrice() * getDiscountPercentage()) + (hasWarranty ? warrantyPrice : 0));
+            setFinalPrice((getBasePrice()) - (getBasePrice() * getDiscountPercentage()/100) + (hasWarranty ? warrantyPrice : 0));
     }
 }

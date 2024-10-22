@@ -1,11 +1,13 @@
 package com.shoppingcart;
 
+import com.shoppingcart.cart.Cart;
 import com.shoppingcart.product.Clothing;
 import com.shoppingcart.product.Electronics;
 import com.shoppingcart.product.Grocery;
 import com.shoppingcart.product.Product;
 import com.shoppingcart.stock.Stock;
 
+import java.awt.*;
 import java.util.Scanner;
 
 public class Main {
@@ -25,132 +27,36 @@ public class Main {
 //        cart.calculateTotal();
 
         final Scanner scanner = new Scanner(System.in);
+
         boolean quit = false;
 
         while (!quit) {
             printMenu();
             int choice = Integer.parseInt(scanner.next());
+            scanner.nextLine();
 
             switch (choice) {
                 case 1:
-                    int category = 0;
-                    String productName = "";
-                    double basePrice = 0.0;
-                    String hasWarranty = "";
-                    String isOnSale = "";
-                    int discountPercentage = 0;
-                    int inventory = 0;
-                    while(category==0 || category > 3) {
-                        System.out.print("\n[1] - Groceries\n");
-                        System.out.print("[2] - Electronics\n");
-                        System.out.print("[3] - Clothing\n");
-                        System.out.print("Enter your choice: ");
-                        category = Integer.parseInt(scanner.next());
-                    }
-                    while(productName.isEmpty()) {
-                        System.out.print("\nProduct name: ");
-                        productName = scanner.next().toUpperCase();
-                    }
-                   if(!Stock.hasItem(productName)) {
-                       while (basePrice == 0.0 || basePrice < 0.0 ) {
-                           System.out.print("Base price: ");
-                           basePrice = Double.parseDouble(scanner.next());
-                       }
-                       while(!isOnSale.equals("Y") && !isOnSale.equals("N")) {
-                           System.out.print("Is on sale? [Y/N]: ");
-                           isOnSale = scanner.next().toUpperCase();
-                       }
-                       if(isOnSale.equals("Y")) {
-                           System.out.print("Discount percentage (%): ");
-                           discountPercentage = Integer.parseInt(scanner.next());
-                       }
-                       while(!hasWarranty.equals("Y") && !hasWarranty.equals("N") && category==2) {
-                           if(!Stock.hasItem(productName)) {
-                               System.out.print("Has Warranty? [Y/N]: ");
-                               hasWarranty = scanner.next().toUpperCase();
-                           }
-                       }
-                   } else {
-                       Product product = Stock.getFirstItem(productName);
-                       basePrice = product.getBasePrice();
-                       hasWarranty = (product instanceof Electronics && product.hasWarranty()) ? "Y" : "N";
-                       isOnSale = product.isOnSale() ? "Y" : "N";
-                       if (isOnSale.equals("Y")) {
-                           discountPercentage = product.getDiscountPercentage();
-                       }
-                   }
-                    System.out.print("Amount to add: ");
-                    inventory = Integer.parseInt(scanner.next());
-                    switch (category) {
-                        case 1:
-                            int count = 0;
-                            do {
-                                Product grocery = new Grocery(productName, basePrice, (isOnSale.equals("Y")), discountPercentage, inventory);
-                                Stock.addItemStock(grocery);
-                                count++;
-                            } while (count < inventory);
-                            Stock.printStock(0);
-                            break;
-                        case 2:
-                            count = 0;
-                            do {
-                                Product electronics = new Electronics(productName, basePrice, (isOnSale.equals("Y")), discountPercentage,(hasWarranty.equals("Y")), inventory);
-                                Stock.addItemStock(electronics);
-                                count++;
-                            } while (count < inventory);
-                            Stock.printStock(0);
-                            break;
-                        case 3:
-                            count = 0;
-                            do {
-                                Product clothing = new Clothing(productName, basePrice, (isOnSale.equals("Y")), discountPercentage, inventory);
-                                Stock.addItemStock(clothing);
-                                count++;
-                            } while (count < inventory);
-                            Stock.printStock(0);
-                            break;
-                    }
-                    System.out.print("\n: ");
+                    MenuOption.printAddItem(scanner);
                     break;
                 case 2:
-                    int deletionOption = 0;
-                    System.out.print("Enter the product name: ");
-                    productName = scanner.next().toUpperCase();
-                    if(Stock.hasItem(productName)) {
-                        while(deletionOption == 0 || deletionOption > 2 || deletionOption < 0) {
-                            System.out.print("\n[1] - Delete one product\n");
-                            System.out.print("[2] - Delete all products\n");
-                            System.out.print("Enter your choice: ");
-                            deletionOption = Integer.parseInt(scanner.next());
-                    }
-                        Stock.removeItemStock(productName, deletionOption);
-                        System.out.println("Item successfully removed!");
-                        Stock.printStock(0);
-                        break;
-                    }
-                    System.out.println("Item not found in stock!");// TO-DO : implements deletion
+                    MenuOption.printRemoveItem(scanner);
                     break;
                 case 3:
-                    int sortOption = 0;
-                    while(sortOption==0 || sortOption > 2) {
-                        System.out.print("\n[1] - Sort by Name\n");
-                        System.out.print("[2] - Sort by Price\n");
-                        System.out.print("Enter your choice: ");
-                        sortOption = Integer.parseInt(scanner.next());
-                    }
-                    Stock.printStock(sortOption);
+                    MenuOption.printShowStock(scanner);
                     break;
                 case 4:
-                    String itemName;
-                    System.out.println("Item name: ");
-                    itemName = scanner.next().toUpperCase();
-                    Stock.searchItem(itemName);
+                    MenuOption.printSearchItem(scanner);
                     break;
                 case 5:
-
+                    MenuOption.printAddToCart(scanner);
+                    break;
                 case 6:
-
+                    MenuOption.printRemoveFromCart(scanner);
+                    break;
                 case 7:
+                    // SHOW CART
+                case 8:
                     quit = true;
                     System.out.println("Exiting the application...");
                     break;

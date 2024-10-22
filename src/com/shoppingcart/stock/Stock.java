@@ -5,9 +5,9 @@ import com.shoppingcart.product.Product;
 import java.util.*;
 
 public class Stock {
-    public static final HashMap<String, Integer> productQuantity = new HashMap<>();
+    private static final HashMap<String, Integer> productQuantity = new HashMap<>();
     private static final List<Product> stock = new LinkedList<>();
-    public static final List<Product> groceriesList = new LinkedList<>();
+    private static final List<Product> groceriesList = new LinkedList<>();
     private static final List<Product> electronicsList = new LinkedList<>();
     private static final List<Product> clothingList = new LinkedList<>();
     private static final List<List<Product>> listLists = new LinkedList<>(Arrays.asList(groceriesList, electronicsList, clothingList));
@@ -182,5 +182,9 @@ public class Stock {
                 break;
 
         }
+    }
+
+    public static boolean isEmpty() {
+        return stock.isEmpty();
     }
 }
