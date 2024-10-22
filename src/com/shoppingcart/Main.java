@@ -12,24 +12,8 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-//        Product clothing =  new Clothing("Cargo Pants", 50.00,  false, 5, 5);
-//        Product clothing1 =  new Clothing("Cargo Pants", 50.00,  false, 5, 5);
-//        Product grocery = new Grocery("Candy", 1000.00, true, 5, 5);
-//        Product electronics = new Electronics("iPhone", 500.00, false, 0, false,5 );
-//
-//        Cart<Product> cart = new Cart<>();
-//        cart.addToCart(electronics);
-//        cart.addToCart(electronics);
-//        cart.addToCart(electronics);
-//        cart.addToCart(electronics);
-//        cart.addToCart(electronics);
-//        cart.addToCart(electronics);
-//        cart.calculateTotal();
-
         final Scanner scanner = new Scanner(System.in);
-
         boolean quit = false;
-
         while (!quit) {
             printMenu();
             int choice = Integer.parseInt(scanner.next());
@@ -55,7 +39,8 @@ public class Main {
                     MenuOption.printRemoveFromCart(scanner);
                     break;
                 case 7:
-                    // SHOW CART
+                    MenuOption.printShowCart(scanner);
+                    break;
                 case 8:
                     quit = true;
                     System.out.println("Exiting the application...");

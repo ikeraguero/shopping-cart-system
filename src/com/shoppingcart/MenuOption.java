@@ -183,7 +183,7 @@ public class MenuOption {
             return;
         }
         String productToRemove = "";
-        Stock.printStock(0);
+        Cart.printCart(1);
         while(productToRemove.isEmpty()) {
             System.out.print("Enter the name of the product to be removed: ");
             productToRemove = scanner.nextLine().toUpperCase().toUpperCase();
@@ -191,6 +191,20 @@ public class MenuOption {
         Cart.removeFromCart(productToRemove);
     }
 
-    
+    public static void printShowCart(Scanner scanner) {
+        if(Cart.isEmpty()) {
+            System.out.println("Cart is empty!");
+            return;
+        }
+        int sortOption = 0;
+        while(sortOption==0 || sortOption > 2) {
+            System.out.print("\n[1] - Sort by Name\n");
+            System.out.print("[2] - Sort by Price\n");
+            System.out.print("Enter your choice: ");
+            sortOption = Integer.parseInt(scanner.next());
+        }
+        Cart.printCart(sortOption);
+
+    }
 
     };

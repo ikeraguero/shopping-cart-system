@@ -30,7 +30,7 @@ public abstract class Product implements Cloneable {
         return name;
     }
 
-    public double getFinalPrice() {
+    public Double getFinalPrice() {
         return finalPrice;
     }
 
@@ -66,14 +66,4 @@ public abstract class Product implements Cloneable {
 
     public abstract boolean hasWarranty();
 
-    @Override
-    public Product clone() {
-        try {
-            Product clone = (Product) super.clone();
-            // TODO: copy mutable state here, so the clone can't change the internals of the original
-            return clone;
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
-    }
 }

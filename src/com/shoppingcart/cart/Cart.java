@@ -3,6 +3,8 @@ package com.shoppingcart.cart;
 import com.shoppingcart.product.Product;
 import com.shoppingcart.stock.Stock;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,6 +20,7 @@ public class Cart <T extends Product> {
         assert item != null;
         cart.add(item);
         Stock.removeItemStock(itemName, 1);
+        System.out.println("Item successfully added to your cart!");
     }
 
     public static void removeFromCart(String name) {
@@ -26,12 +29,15 @@ public class Cart <T extends Product> {
                 Product addItem = Cart.getProduct(name);
                 Stock.addItemStock(addItem);
                 cart.remove(item);
+                System.out.println("Item successfully removed!");
+                return;
             }
         }
+        System.out.println("Item not found!");
 
     }
 
-    public void calculateTotal() {
+    private static void calculateTotal() {
         double total = 0;
         for(Product item : cart) {
             total += item.getFinalPrice();
@@ -45,11 +51,6 @@ public class Cart <T extends Product> {
                 %n""","TOTAL",  total);
     }
 
-    public void sortCartByName() {
-        cart.sort((o1, o2) -> o1.getName().compareTo(o2.getName()));
-        cart.forEach(System.out::println);
-    }
-
     private static Product getProduct(String itemName) {
         for(Product item : cart) {
             if(item.getName().equals(itemName)) {
@@ -59,26 +60,24 @@ public class Cart <T extends Product> {
         return null;
     }
 
-    public void sortCartByPrice() {
-        cart.sort((o1, o2) -> {
-            int result =0;
-            if(o1.getBasePrice() < o2.getBasePrice()) {
-                result = -1;
-            }
-            if(o1.getBasePrice() > o2.getBasePrice()) {
-                result = 1;
-            }
-            if(o1.getBasePrice() == o2.getBasePrice()) {
-                result = 0;
-            }
-            return result;
-        });
-        cart.forEach(System.out::println);
+    public static void sortCart(int sortOption) {
+        switch (sortOption) {
+            case 1:
+                cart.sort((o1, o2)->o1.getName().compareTo(o2.getName()));
+                break;
+            case 2:
+                cart.sort(Comparator.comparing(Product::getFinalPrice).reversed());
+                break;
+        }
     }
 
-    public static List<Product> getCart() {
-        return cart;
+    public static void printCart(int sortOption) {
+        sortCart(sortOption);
+        System.out.println("\n=========== Your Cart =============");
+        calculateTotal();
+        System.out.println("====================================");
     }
+
 
     public static boolean isEmpty() {
         return cart.isEmpty();

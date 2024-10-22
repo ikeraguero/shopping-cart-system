@@ -126,6 +126,7 @@ public class Stock {
     }
 
     private static void printSortedStock() {
+        System.out.println("\n============== Stock =================");
         for (List<Product> list: Stock.listLists) {
             if(list.isEmpty()) continue;
             System.out.println();
@@ -142,7 +143,6 @@ public class Stock {
                         }
                         System.out.printf("%-20sR$%.2f (%d %s)\n", item.getName(), item.getFinalPrice(), productCount, productCount > 1 ? "units" : "unit");
                     }
-                /// FIND THE PRODUCT COUNT
             }
 //            for(Product item : list) {
 //                if(productMap.containsKey(item.getName())) continue;
@@ -151,13 +151,14 @@ public class Stock {
 //
 //            }
         }
+        System.out.println("\n======================================");
     }
 
     public static void searchItem(String itemName){
         for(Product item : stock) {
             if(item.getName().equals(itemName)) {
                 int quantity = productQuantity.get(itemName);
-                System.out.println("Item found!");
+                System.out.println("\nItem found!");
                 System.out.printf("%-20sR$%.2f (%d %s)\n", item.getName(), item.getFinalPrice(), quantity, quantity > 1 ? "units" : "unit");
                 return;
             }
@@ -175,9 +176,9 @@ public class Stock {
                 printSortedStock();
                 break;
             case 2:
-                electronicsList.sort(Comparator.comparing(Product::getBasePrice).reversed());
-                groceriesList.sort(Comparator.comparing(Product::getBasePrice).reversed());
-                clothingList.sort(Comparator.comparing(Product::getBasePrice).reversed());
+                electronicsList.sort(Comparator.comparing(Product::getFinalPrice).reversed());
+                groceriesList.sort(Comparator.comparing(Product::getFinalPrice).reversed());
+                clothingList.sort(Comparator.comparing(Product::getFinalPrice).reversed());
                 printSortedStock();
                 break;
 
