@@ -8,46 +8,37 @@ import com.shoppingcart.product.Product;
 import com.shoppingcart.stock.Stock;
 
 import java.awt.*;
+import java.util.HashMap;
 import java.util.Scanner;
+import java.util.function.Consumer;
 
 public class Main {
     public static void main(String[] args) {
+        HashMap<Integer, Consumer<Scanner>> menuMap = new HashMap<>();
+        menuMap.put(1, MenuOption::printAddItem);
+        menuMap.put(2, MenuOption::printRemoveItem);
+        menuMap.put(3, MenuOption::printShowStock);
+        menuMap.put(4, MenuOption::printSearchItem);
+        menuMap.put(5, MenuOption::printAddToCart);
+        menuMap.put(6, MenuOption::printRemoveFromCart);
+        menuMap.put(7, MenuOption::printShowCart);
         final Scanner scanner = new Scanner(System.in);
         boolean quit = false;
         while (!quit) {
             printMenu();
             int choice = Integer.parseInt(scanner.next());
             scanner.nextLine();
-
-            switch (choice) {
-                case 1:
-                    MenuOption.printAddItem(scanner);
-                    break;
-                case 2:
-                    MenuOption.printRemoveItem(scanner);
-                    break;
-                case 3:
-                    MenuOption.printShowStock(scanner);
-                    break;
-                case 4:
-                    MenuOption.printSearchItem(scanner);
-                    break;
-                case 5:
-                    MenuOption.printAddToCart(scanner);
-                    break;
-                case 6:
-                    MenuOption.printRemoveFromCart(scanner);
-                    break;
-                case 7:
-                    MenuOption.printShowCart(scanner);
-                    break;
-                case 8:
-                    quit = true;
-                    System.out.println("Exiting the application...");
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please try again.");
+            if(choice==8) {
+                quit = true;
+                System.out.println("Exiting the application...");
+                return;
             }
+                Consumer<Scanner> action = menuMap.get(choice);
+                if (action != null) {
+                    action.accept(scanner);
+                } else {
+                    System.out.println("Invalid choice. Please try again.");
+                }
         }
     }
 
