@@ -7,14 +7,14 @@ public abstract class Product implements Cloneable {
     private String category;
     private final boolean isOnSale;
     private final int discountPercentage;
-    private int inventory;
+    private int quantity;
 
-    public Product(String name, double basePrice, boolean isOnSale, int discountPercentage, int inventory, String category) {
+    public Product(String name, double basePrice, boolean isOnSale, int discountPercentage, int quantity, String category) {
         this.name = name;
         this.basePrice = basePrice;
         this.isOnSale = isOnSale;
         this.discountPercentage = discountPercentage;
-        this.inventory = inventory;
+        this.quantity = quantity;
         this.category = category;
     }
 
@@ -38,12 +38,12 @@ public abstract class Product implements Cloneable {
         return category;
     }
 
-    public int getInventory() {
-        return inventory;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setInventory(int inventory) {
-        this.inventory = inventory;
+    public void setInventory(int quantity) {
+        this.quantity = quantity;
     }
 
     public boolean isOnSale() {

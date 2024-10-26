@@ -7,7 +7,15 @@ import com.shoppingcart.product.Grocery;
 import com.shoppingcart.product.Product;
 import com.shoppingcart.stock.Stock;
 
+import java.util.HashMap;
 import java.util.Scanner;
+import java.util.function.Consumer;
+
+
+@FunctionalInterface
+interface SixParamFunction<T1, T2, T3, T4, T5, T6> {
+    void apply(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6);
+}
 
 public class MenuOption {
     private static int category = 0;
@@ -16,9 +24,15 @@ public class MenuOption {
     private static String hasWarranty = "";
     private static String isOnSale = "";
     private static int discountPercentage = 0;
-    private static int inventory = 0;
+    private static int quantity = 0;
+    private static HashMap<Integer, SixParamFunction<String, Double, String, Integer, String, Integer>> typeOptionsMap;
 
     public MenuOption() {
+        /// Type Map
+        typeOptionsMap = new HashMap<>();
+        typeOptionsMap.put(1, Grocery::createGrocery);
+        typeOptionsMap.put(2, Electronics::createElectronic);
+        typeOptionsMap.put(3, Clothing::createClothing);
     }
 
     private static void resetAllFields() {
@@ -28,10 +42,11 @@ public class MenuOption {
         hasWarranty = "";
         isOnSale = "";
         discountPercentage = 0;
-        inventory = 0;
+        quantity = 0;
     }
 
     public static void printAddItem(Scanner scanner){
+
         while(category==0 || category > 3) {
             System.out.print("\n[1] - Groceries\n");
             System.out.print("[2] - Electronics\n");
@@ -75,36 +90,17 @@ public class MenuOption {
             }
         }
         System.out.print("Amount to add: ");
-        inventory = Integer.parseInt(scanner.next());
-        switch (category) {
-            case 1:
-                int count = 0;
-                do {
-                    Product grocery = new Grocery(productName, basePrice, (isOnSale.equals("Y")), discountPercentage, inventory);
-                    Stock.addItemStock(grocery);
-                    count++;
-                } while (count < inventory);
-                Stock.printStock(0);
-                break;
-            case 2:
-                count = 0;
-                do {
-                    Product electronics = new Electronics(productName, basePrice, (isOnSale.equals("Y")), discountPercentage,(hasWarranty.equals("Y")), inventory);
-                    Stock.addItemStock(electronics);
-                    count++;
-                } while (count < inventory);
-                Stock.printStock(0);
-                break;
-            case 3:
-                count = 0;
-                do {
-                    Product clothing = new Clothing(productName, basePrice, (isOnSale.equals("Y")), discountPercentage, inventory);
-                    Stock.addItemStock(clothing);
-                    count++;
-                } while (count < inventory);
-                Stock.printStock(0);
-                break;
+        quantity = Integer.parseInt(scanner.next());
+        if(category < 1 || category > 3) {
+            System.out.println("Invalid option");
+            return;
         }
+        // Remove while loop that creates n amount of objects in memory, now it creates only one object and will use
+        // the quantity field to determine the amount
+        System.out.println("2");
+        SixParamFunction<String, Double, String, Integer, String, Integer> action= typeOptionsMap.get(category);
+        action.apply(productName, basePrice, isOnSale, discountPercentage, hasWarranty, quantity);
+        System.out.println("1");
         resetAllFields();
         System.out.print("\n ");
     }
@@ -133,8 +129,7 @@ public class MenuOption {
             return;
         }
         resetAllFields();
-        System.out.println("Item not found in stock!");// TO-DO : implements deletion
-        return;
+        System.out.println("Item not found in stock!");
     }
 
     public static void printShowStock(Scanner scanner) {
