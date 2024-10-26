@@ -14,6 +14,7 @@ import java.util.function.Consumer;
 
 public class Main {
     public static void main(String[] args) {
+        MenuOption menu = new MenuOption();
         HashMap<Integer, Consumer<Scanner>> menuMap = new HashMap<>();
         menuMap.put(1, MenuOption::printAddItem);
         menuMap.put(2, MenuOption::printRemoveItem);
