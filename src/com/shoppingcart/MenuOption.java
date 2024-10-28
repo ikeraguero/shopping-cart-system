@@ -97,10 +97,8 @@ public class MenuOption {
         }
         // Remove while loop that creates n amount of objects in memory, now it creates only one object and will use
         // the quantity field to determine the amount
-        System.out.println("2");
         SixParamFunction<String, Double, String, Integer, String, Integer> action= typeOptionsMap.get(category);
         action.apply(productName, basePrice, isOnSale, discountPercentage, hasWarranty, quantity);
-        System.out.println("1");
         resetAllFields();
         System.out.print("\n ");
     }
