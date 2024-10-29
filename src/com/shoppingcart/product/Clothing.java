@@ -3,15 +3,13 @@ package com.shoppingcart.product;
 import com.shoppingcart.stock.Stock;
 
 public class Clothing extends Product{
-    public Clothing(String name, double basePrice, boolean isOnSale, int discountPercentage, int quantity) {
-        super(name, basePrice, isOnSale, discountPercentage, quantity, "clothing");
+    public Clothing(String name, double basePrice, String isOnSale, int discountPercentage, String hasWarranty, int quantity) {
+        super(name, basePrice, isOnSale, discountPercentage, hasWarranty, quantity, "clothing");
         this.calculatePrice();
     }
 
-    public static void createClothing(String productName, double basePrice, String isOnSale, int discountPercentage, String hasWarranty, int quantity) {
-        Product clothing = new Clothing(productName, basePrice, (isOnSale.equals("Y")), discountPercentage, quantity);
-        Stock.addItemStock(clothing);
-        Stock.printStock(0);
+    public static Product createClothing(String productName, double basePrice, String isOnSale, int discountPercentage, String hasWarranty, int quantity) {
+        return new Clothing(productName, basePrice, isOnSale, discountPercentage, hasWarranty,  quantity);
     }
 
 

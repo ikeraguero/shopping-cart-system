@@ -1,20 +1,11 @@
 package com.shoppingcart;
 
-import com.shoppingcart.cart.Cart;
-import com.shoppingcart.product.Clothing;
-import com.shoppingcart.product.Electronics;
-import com.shoppingcart.product.Grocery;
-import com.shoppingcart.product.Product;
-import com.shoppingcart.stock.Stock;
-
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
 public class Main {
-    public static void main(String[] args) {
-        MenuOption menu = new MenuOption();
+    public static void main(String[] args) {;
         HashMap<Integer, Consumer<Scanner>> menuMap = new HashMap<>();
         menuMap.put(1, MenuOption::printAddItem);
         menuMap.put(2, MenuOption::printRemoveItem);

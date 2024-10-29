@@ -18,7 +18,9 @@ public class Stock {
     public static void addItemStock(Product item) {
         if(stock.stream().anyMatch(o->o.getName().equals(item.getName()))) // streams and lambda to check if there's already an object with the same name value
         {
-            // TODO: Code to update the total product amount
+            Product product = stock.stream().filter(o->o.getName().equals(item.getName())).toList().getFirst();
+            product.setInventory(product.getQuantity()+item.getQuantity());
+            calculateQuantity();
             return;
         }
         stock.add(item);
@@ -36,20 +38,21 @@ public class Stock {
     }
 
     public static void removeItemStock(String name, int option) {
-        String category = "";
-        for(Product item : stock) {
-            if(item.getName().equals(name)) {
-                category = item.getCategory();
-                break;
-            }
-        }
+//        String category = "";
+//        for(Product item : stock) {
+//            if(item.getName().equals(name)) {
+//                category = item.getCategory();
+//                break;
+//            }
+//        }
+        Product product = getProduct(name);
         switch (option) {
             case 1:
-                stock.remove(getFirstItem(name));
-                // TODO: Code to remove only 1 unit
+                product.setInventory(product.getQuantity()-1);
+                if(product.getQuantity() == 0) stock.remove(product);
                 break;
             case 2:
-                stock.remove(getFirstItem(name));
+                stock.remove(product);
                 break;
         }
         calculateQuantity();
@@ -62,6 +65,10 @@ public class Stock {
             }
         }
         return false;
+    }
+
+    public static Product getProduct(String name) {
+       return stock.stream().filter(o->o.getName().equals(name)).toList().getFirst();
     }
 
     public static Product getFirstItem(String name) {
@@ -123,9 +130,8 @@ public class Stock {
     public static void searchItem(String itemName){
         for(Product item : stock) {
             if(item.getName().equals(itemName)) {
-                int quantity = productQuantity.get(itemName);
                 System.out.println("\nItem found!");
-                System.out.printf("%-20sR$%.2f (%d %s)\n", item.getName(), item.getFinalPrice(), quantity, quantity > 1 ? "units" : "unit");
+                System.out.printf("%-20sR$%.2f (%d %s)\n", item.getName(), item.getFinalPrice(), item.getQuantity(), item.getQuantity() > 1 ? "units" : "unit");
                 return;
             }
         }
@@ -134,14 +140,33 @@ public class Stock {
 
     public static void printStock(int sortType) {
         sortType = (sortType == 0 ? 1 : sortType);
+        String previousCategory = null;
         switch (sortType) {
             case 1:
+                stock.sort(Comparator.comparing(Product::getCategory));
+                for(Product product : stock) {
+                    if(!product.getCategory().equals(previousCategory)) {
+                        previousCategory = product.getCategory();
+                        System.out.println();
+                        System.out.println(previousCategory.toUpperCase());
+                    }
+                    System.out.print(product);
+                }
+
 //                electronicsList.sort(Comparator.comparing(Product::getName));
 //                groceriesList.sort(Comparator.comparing(Product::getName));
 //                clothingList.sort(Comparator.comparing(Product::getName));
 //                printSortedStock();
                 break;
             case 2:
+                stock.sort(Comparator.comparing(Product::getFinalPrice).reversed());
+                for(Product product : stock) {
+                    if(!product.getCategory().equals(previousCategory)) {
+                        previousCategory = product.getCategory().toUpperCase();
+                        System.out.println(previousCategory);
+                    }
+                    System.out.println(product);
+                }
 //                electronicsList.sort(Comparator.comparing(Product::getFinalPrice).reversed());
 //                groceriesList.sort(Comparator.comparing(Product::getFinalPrice).reversed());
 //                clothingList.sort(Comparator.comparing(Product::getFinalPrice).reversed());

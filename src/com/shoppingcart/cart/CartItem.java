@@ -2,25 +2,19 @@ package com.shoppingcart.cart;
 
 import com.shoppingcart.product.Product;
 
-public class CartItem {
-    private String name;
-    private double price;
+public class CartItem extends Product{
 
-
-
-    public String getName() {
-        return name;
+    public CartItem(String productName, double basePrice, String isOnSale, int discountPercentage, String hasWarranty, int quantity, String category) {
+        super(productName, basePrice, isOnSale, discountPercentage, hasWarranty, quantity, category);
     }
 
-    public void setName(String name) {
-        this.name = name;
+    @Override
+    public void calculatePrice() {
+
     }
 
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
+    @Override
+    public boolean hasWarranty() {
+        return false;
     }
 }

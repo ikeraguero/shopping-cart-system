@@ -12,11 +12,6 @@ import java.util.Scanner;
 import java.util.function.Consumer;
 
 
-@FunctionalInterface
-interface SixParamFunction<T1, T2, T3, T4, T5, T6> {
-    void apply(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6);
-}
-
 public class MenuOption {
     private static int category = 0;
     private static String productName = "";
@@ -43,6 +38,10 @@ public class MenuOption {
         isOnSale = "";
         discountPercentage = 0;
         quantity = 0;
+    }
+
+    public static HashMap<Integer, SixParamFunction<String, Double, String, Integer, String, Integer>> getTypeOptionsMap() {
+        return typeOptionsMap;
     }
 
     public static void printAddItem(Scanner scanner){
@@ -98,7 +97,9 @@ public class MenuOption {
         // Remove while loop that creates n amount of objects in memory, now it creates only one object and will use
         // the quantity field to determine the amount
         SixParamFunction<String, Double, String, Integer, String, Integer> action= typeOptionsMap.get(category);
-        action.apply(productName, basePrice, isOnSale, discountPercentage, hasWarranty, quantity);
+        Product product = action.apply(productName, basePrice, isOnSale, discountPercentage, hasWarranty, quantity);
+        Stock.addItemStock(product);
+        Stock.printStock(0);
         resetAllFields();
         System.out.print("\n ");
     }
@@ -110,7 +111,7 @@ public class MenuOption {
         };
         int deletionOption = -1;
         System.out.print("Enter the product name: ");
-        String newProductName = scanner.nextLine().toUpperCase();
+        String newProductName = scanner.next().toUpperCase();
 
         if(Stock.hasItem(newProductName)) {
             while(deletionOption == 0 || deletionOption > 2 || deletionOption < 0) {

@@ -1,21 +1,23 @@
 package com.shoppingcart.product;
 
-public abstract class Product implements Cloneable {
-    private final String name;
-    private final double basePrice;
-    private double finalPrice;
-    private String category;
-    private final boolean isOnSale;
-    private final int discountPercentage;
-    private int quantity;
+public abstract class Product {
+    protected final String name;
+    protected final double basePrice;
+    protected double finalPrice;
+    protected String category;
+    protected final boolean isOnSale;
+    protected final int discountPercentage;
+    protected int quantity;
+    protected boolean hasWarranty;
 
-    public Product(String name, double basePrice, boolean isOnSale, int discountPercentage, int quantity, String category) {
-        this.name = name;
+    public Product(String productName, double basePrice, String isOnSale, int discountPercentage, String hasWarranty, int quantity, String category) {
+        this.name = productName;
         this.basePrice = basePrice;
-        this.isOnSale = isOnSale;
+        this.isOnSale = !isOnSale.equals("N");
         this.discountPercentage = discountPercentage;
         this.quantity = quantity;
         this.category = category;
+        this.hasWarranty = !hasWarranty.equals("N");
     }
 
     public double getBasePrice() {
@@ -57,8 +59,8 @@ public abstract class Product implements Cloneable {
     @Override
     public String toString() {
         return """
-                %-20sR$%.2f
-                """.formatted(name, finalPrice);
+                %-20sR$%.2f (%d)
+                """.formatted(name, finalPrice, quantity);
     }
 
     public abstract void calculatePrice();
