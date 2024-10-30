@@ -16,9 +16,14 @@ public class Stock {
     }
 
     public static void addItemStock(Product item) {
-        if(stock.stream().anyMatch(o->o.getName().equals(item.getName()))) // streams and lambda to check if there's already an object with the same name value
+        if(stock.stream()
+                .anyMatch(o->o.getName().equals(item.getName()))) // streams and lambda to check if there's already an object with the same name value
         {
-            Product product = stock.stream().filter(o->o.getName().equals(item.getName())).toList().getFirst();
+            Product product = stock.stream()
+                    .filter(o->o.getName().equals(item.getName()))
+                    .toList()
+                    .getFirst();
+
             product.setInventory(product.getQuantity()+item.getQuantity());
             calculateQuantity();
             return;
@@ -27,15 +32,15 @@ public class Stock {
         calculateQuantity();
     }
 
-    private static void removeSingleItem(List<Product> list, String name) {
-        Iterator<Product> iterator = list.iterator();
-        while(iterator.hasNext()) {
-            Product product = iterator.next();
-            if(product.getName().equals(name)) {
-                iterator.remove();
-            }
-        }
-    }
+//    private static void removeSingleItem(List<Product> list, String name) {
+//        Iterator<Product> iterator = list.iterator();
+//        while(iterator.hasNext()) {
+//            Product product = iterator.next();
+//            if(product.getName().equals(name)) {
+//                iterator.remove();
+//            }
+//        }
+//    }
 
     public static void removeItemStock(String name, int option) {
 //        String category = "";
@@ -68,7 +73,10 @@ public class Stock {
     }
 
     public static Product getProduct(String name) {
-       return stock.stream().filter(o->o.getName().equals(name)).toList().getFirst();
+       return stock.stream()
+               .filter(o->o.getName().equals(name))
+               .toList()
+               .getFirst();
     }
 
     public static Product getFirstItem(String name) {

@@ -8,6 +8,7 @@ import com.shoppingcart.product.Product;
 import com.shoppingcart.stock.Stock;
 
 import java.util.HashMap;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
@@ -51,32 +52,44 @@ public class MenuOption {
             System.out.print("[2] - Electronics\n");
             System.out.print("[3] - Clothing\n");
             System.out.print("Enter your choice: ");
-            category = Integer.parseInt(scanner.next());
-            scanner.nextLine();
+            try {
+                category = Integer.parseInt(scanner.next());
+                scanner.nextLine();
+            } catch (NumberFormatException _) {}
         }
         while(productName.isEmpty()) {
             System.out.print("Product name: ");
-            productName = scanner.nextLine().toUpperCase();
+            try {
+                productName = scanner.nextLine().toUpperCase();
+            } catch (NumberFormatException _) {}
         }
         if(!Stock.hasItem(productName)) {
             while (basePrice == 0.0 || basePrice < 0.0 ) {
                 System.out.print("Base price: ");
-                basePrice = Double.parseDouble(scanner.next());
+                try {
+                    basePrice = Double.parseDouble(scanner.next());
+                } catch (NumberFormatException _) {}
                 scanner.nextLine();
             }
             while(!isOnSale.equals("Y") && !isOnSale.equals("N")) {
                 System.out.print("Is on sale? [Y/N]: ");
-                isOnSale = scanner.next().toUpperCase();
+                try {
+                    isOnSale = scanner.next().toUpperCase();
+                } catch (NumberFormatException _) {}
             }
             if(isOnSale.equals("Y")) {
                 System.out.print("Discount percentage (%): ");
-                discountPercentage = Integer.parseInt(scanner.next());
+                try {
+                    discountPercentage = Integer.parseInt(scanner.next());
+                } catch (NumberFormatException _) {}
                 scanner.nextLine();
             }
             while(!hasWarranty.equals("Y") && !hasWarranty.equals("N") && category==2) {
                 if(!Stock.hasItem(productName)) {
                     System.out.print("Has Warranty? [Y/N]: ");
-                    hasWarranty = scanner.next().toUpperCase();
+                    try {
+                        hasWarranty = scanner.next().toUpperCase();
+                    } catch (NumberFormatException _) {}
                 }
             }
         } else {
@@ -88,8 +101,9 @@ public class MenuOption {
                 discountPercentage = product.getDiscountPercentage();
             }
         }
-        System.out.print("Amount to add: ");
-        quantity = Integer.parseInt(scanner.next());
+            System.out.print("Amount to add: ");
+            quantity = Integer.parseInt(scanner.next());
+            scanner.nextLine();
         if(category < 1 || category > 3) {
             System.out.println("Invalid option");
             return;

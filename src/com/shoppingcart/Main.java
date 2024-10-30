@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 public class Main {
     public static void main(String[] args) {;
         HashMap<Integer, Consumer<Scanner>> menuMap = new HashMap<>();
+        new MenuOption();
         menuMap.put(1, MenuOption::printAddItem);
         menuMap.put(2, MenuOption::printRemoveItem);
         menuMap.put(3, MenuOption::printShowStock);
@@ -18,7 +19,11 @@ public class Main {
         boolean quit = false;
         while (!quit) {
             printMenu();
-            int choice = Integer.parseInt(scanner.next());
+            int choice = 0;
+            try {
+                choice = Integer.parseInt(scanner.next());
+            } catch (NumberFormatException _) {
+            }
             scanner.nextLine();
             if(choice==8) {
                 quit = true;

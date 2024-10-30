@@ -52,8 +52,13 @@ public class Cart <T extends Product> {
     }
 
     private static void calculateTotal() {
-        Double[] prices = cart.values().stream().map(o->o.getFinalPrice()*o.getQuantity()).toArray(Double[]::new);
-        double total = Arrays.stream(prices).reduce(0.0, Double::sum);
+        Double[] prices = cart.values().stream()
+                .map(o->o.getFinalPrice()*o.getQuantity())
+                .toArray(Double[]::new);
+
+        double total = Arrays.stream(prices)
+                .reduce(0.0, Double::sum);
+
         System.out.printf("\n%-20sR$%.2f%n", "TOTAL", total);
     }
 //
