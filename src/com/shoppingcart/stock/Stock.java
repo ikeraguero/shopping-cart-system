@@ -183,7 +183,7 @@ public class Stock {
                 System.out.println();
                 System.out.println(previousCategory.toUpperCase());;
             }
-            System.out.println(product);
+            System.out.print(product);
         }
     }
 

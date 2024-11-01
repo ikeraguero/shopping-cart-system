@@ -10,8 +10,7 @@ import java.util.stream.Collectors;
 
 
 public class Cart <T extends Product> {
-    private static TreeMap<String, Product> cart = new TreeMap<>();
-
+    private static List<Product> cart = new LinkedList<>();
 
     //changed
     public static void addToCart(String itemName) {
@@ -19,9 +18,12 @@ public class Cart <T extends Product> {
             System.out.println("Item not available in stock!");
             return;
         }
-        if(cart.containsKey(itemName)) {
+        if(hasItem(itemName)) {
             // Updating cart
-            Product product = cart.get(itemName);
+            Product product = cart.stream()
+                            .filter(o -> o.getName().equals(itemName))
+                            .toList()
+                            .getFirst();
             product.setQuantity(product.getQuantity()+1);
 
             //Updating stock
@@ -31,20 +33,20 @@ public class Cart <T extends Product> {
         Product product = Stock.getProduct(itemName);
         SixParamFunction<String, Double, String, Integer, String, Integer> action = MenuOption.getTypeOptionsMap().get(product.getCategory().equals("groceries") ? 1 : product.getCategory().equals("electronics") ? 2 : 3);
         Product addProduct = action.apply(product.getName(), product.getBasePrice(), product.isOnSale() ? "Y" : "N", product.getDiscountPercentage(), product.hasWarranty() ? "Y" : "N", 1);
-        cart.put(product.getName(), addProduct);
+        cart.add(addProduct);
         Stock.removeItemStock(itemName, 1);
     }
 
     //changed
     public static void removeFromCart(String itemName) {
-        if(!cart.containsKey(itemName)) {
+        if(!hasItem(itemName)) {
             System.out.println("Item not found in your cart!");
             return;
         }
         // Updating cart
-        Product product = cart.get(itemName);
+        Product product = getItem(itemName);
         product.setQuantity(product.getQuantity()-1);
-        if(product.getQuantity() == 0) cart.remove(product.getName());
+        if(product.getQuantity() == 0) cart.remove(product);
 
         //Updating stock
         SixParamFunction<String, Double, String, Integer, String, Integer> action= MenuOption.getTypeOptionsMap().get(product.getCategory().equals("groceries") ? 1 : product.getCategory().equals("electronics") ? 2 : 3);
@@ -55,7 +57,7 @@ public class Cart <T extends Product> {
     }
 
     private static void calculateTotal() {
-        Double[] prices = cart.values().stream()
+        Double[] prices = cart.stream()
                 .map(o->o.getFinalPrice()*o.getQuantity())
                 .toArray(Double[]::new);
 
@@ -85,10 +87,12 @@ public class Cart <T extends Product> {
 //        }
 //    }
 //
-    public static void printCart(int sortOption) {
+    public static void printCart() {
         System.out.println("\n=========== Your Cart =============");
-        cart.forEach((key, value) -> {
-                    for(int i=0; i<value.getQuantity(); i++) System.out.printf("%-20sR$%.2f%n", key, value.getFinalPrice());
+        Comparator<Product> comparator = Comparator.comparing(Product::getFinalPrice).reversed();
+        cart.sort(comparator);
+        cart.forEach((product) -> {
+                    for(int i=0; i<product.getQuantity(); i++) System.out.printf("%-20sR$%.2f%n", product.getName(), product.getFinalPrice());
                 });
         calculateTotal();
 //        sortCart(sortOption);
@@ -100,5 +104,23 @@ public class Cart <T extends Product> {
 
     public static boolean isEmpty() {
         return cart.isEmpty();
+    }
+
+    //new
+    public static boolean hasItem(String itemName) {
+        for(Product product : cart) {
+            if(product.getName().equals(itemName)) {
+                return true;
+            }
+        }
+            return false;
+    }
+
+    //new
+    public static Product getItem(String itemName) {
+        return cart.stream()
+                .filter(o -> o.getName().equals(itemName))
+                .toList()
+                .getFirst();
     }
 }
