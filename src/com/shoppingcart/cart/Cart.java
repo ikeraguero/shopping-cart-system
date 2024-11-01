@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 public class Cart <T extends Product> {
     private static TreeMap<String, Product> cart = new TreeMap<>();
 
+
+    //changed
     public static void addToCart(String itemName) {
         if(!Stock.hasItem(itemName)) {
             System.out.println("Item not available in stock!");
@@ -20,19 +22,20 @@ public class Cart <T extends Product> {
         if(cart.containsKey(itemName)) {
             // Updating cart
             Product product = cart.get(itemName);
-            product.setInventory(product.getQuantity()+1);
+            product.setQuantity(product.getQuantity()+1);
 
             //Updating stock
             Stock.removeItemStock(itemName, 1);
             return;
         }
         Product product = Stock.getProduct(itemName);
-        SixParamFunction<String, Double, String, Integer, String, Integer> action= MenuOption.getTypeOptionsMap().get(product.getCategory().equals("groceries") ? 1 : product.getCategory().equals("electronics") ? 2 : 3);
+        SixParamFunction<String, Double, String, Integer, String, Integer> action = MenuOption.getTypeOptionsMap().get(product.getCategory().equals("groceries") ? 1 : product.getCategory().equals("electronics") ? 2 : 3);
         Product addProduct = action.apply(product.getName(), product.getBasePrice(), product.isOnSale() ? "Y" : "N", product.getDiscountPercentage(), product.hasWarranty() ? "Y" : "N", 1);
         cart.put(product.getName(), addProduct);
         Stock.removeItemStock(itemName, 1);
     }
 
+    //changed
     public static void removeFromCart(String itemName) {
         if(!cart.containsKey(itemName)) {
             System.out.println("Item not found in your cart!");
@@ -40,7 +43,7 @@ public class Cart <T extends Product> {
         }
         // Updating cart
         Product product = cart.get(itemName);
-        product.setInventory(product.getQuantity()-1);
+        product.setQuantity(product.getQuantity()-1);
         if(product.getQuantity() == 0) cart.remove(product.getName());
 
         //Updating stock

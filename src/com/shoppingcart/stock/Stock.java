@@ -3,6 +3,7 @@ package com.shoppingcart.stock;
 import com.shoppingcart.product.Product;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Stock {
     private static final HashMap<String, Integer> productQuantity = new HashMap<>();
@@ -15,6 +16,7 @@ public class Stock {
     public Stock() {
     }
 
+    //changed
     public static void addItemStock(Product item) {
         if(stock.stream()
                 .anyMatch(o->o.getName().equals(item.getName()))) // streams and lambda to check if there's already an object with the same name value
@@ -24,12 +26,10 @@ public class Stock {
                     .toList()
                     .getFirst();
 
-            product.setInventory(product.getQuantity()+item.getQuantity());
-            calculateQuantity();
+            product.setQuantity(product.getQuantity()+item.getQuantity());
             return;
         }
         stock.add(item);
-        calculateQuantity();
     }
 
 //    private static void removeSingleItem(List<Product> list, String name) {
@@ -42,6 +42,7 @@ public class Stock {
 //        }
 //    }
 
+    //changed
     public static void removeItemStock(String name, int option) {
 //        String category = "";
 //        for(Product item : stock) {
@@ -53,14 +54,13 @@ public class Stock {
         Product product = getProduct(name);
         switch (option) {
             case 1:
-                product.setInventory(product.getQuantity()-1);
+                product.setQuantity(product.getQuantity()-1);
                 if(product.getQuantity() == 0) stock.remove(product);
                 break;
             case 2:
                 stock.remove(product);
                 break;
         }
-        calculateQuantity();
     }
 
     public static boolean hasItem(String name) {
@@ -146,41 +146,44 @@ public class Stock {
         System.out.println("Item not found!");
     }
 
+    // changed
     public static void printStock(int sortType) {
         sortType = (sortType == 0 ? 1 : sortType);
         String previousCategory = null;
-        switch (sortType) {
-            case 1:
-                stock.sort(Comparator.comparing(Product::getCategory));
-                for(Product product : stock) {
-                    if(!product.getCategory().equals(previousCategory)) {
-                        previousCategory = product.getCategory();
-                        System.out.println();
-                        System.out.println(previousCategory.toUpperCase());
-                    }
-                    System.out.print(product);
-                }
-
+//        switch (sortType) {
+//            case 1:
 //                electronicsList.sort(Comparator.comparing(Product::getName));
 //                groceriesList.sort(Comparator.comparing(Product::getName));
 //                clothingList.sort(Comparator.comparing(Product::getName));
 //                printSortedStock();
-                break;
-            case 2:
-                stock.sort(Comparator.comparing(Product::getFinalPrice).reversed());
-                for(Product product : stock) {
-                    if(!product.getCategory().equals(previousCategory)) {
-                        previousCategory = product.getCategory().toUpperCase();
-                        System.out.println(previousCategory);
-                    }
-                    System.out.println(product);
-                }
+//                break;
+//            case 2:
 //                electronicsList.sort(Comparator.comparing(Product::getFinalPrice).reversed());
 //                groceriesList.sort(Comparator.comparing(Product::getFinalPrice).reversed());
 //                clothingList.sort(Comparator.comparing(Product::getFinalPrice).reversed());
 //                printSortedStock();
-                break;
+//                break;
+//        }
+        Comparator<Product> comparator = (sortType == 1) ? Comparator.comparing(Product::getCategory)
+                .thenComparing(Product::getName)
+                : Comparator.comparing(Product::getCategory)
+                .thenComparing(Product::getFinalPrice).reversed();
 
+        List<Product> sortedProducts = stock.stream()
+                .sorted(comparator)
+                .toList();
+
+        printProducts(sortedProducts, previousCategory);
+    }
+
+    private static void printProducts(List<Product> products, String previousCategory) {
+        for (Product product : products) {
+            if(!product.getCategory().equals(previousCategory)) {
+                previousCategory = product.getCategory();
+                System.out.println();
+                System.out.println(previousCategory.toUpperCase());;
+            }
+            System.out.println(product);
         }
     }
 

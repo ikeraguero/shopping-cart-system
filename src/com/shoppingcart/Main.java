@@ -15,6 +15,7 @@ public class Main {
         menuMap.put(5, MenuOption::printAddToCart);
         menuMap.put(6, MenuOption::printRemoveFromCart);
         menuMap.put(7, MenuOption::printShowCart);
+
         final Scanner scanner = new Scanner(System.in);
         boolean quit = false;
         while (!quit) {

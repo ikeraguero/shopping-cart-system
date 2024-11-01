@@ -44,7 +44,7 @@ public abstract class Product {
         return quantity;
     }
 
-    public void setInventory(int quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
