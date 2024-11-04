@@ -31,8 +31,13 @@ public class Cart <T extends Product> {
             return;
         }
         Product product = Stock.getProduct(itemName);
-        SixParamFunction<String, Double, String, Integer, String, Integer> action = MenuOption.getTypeOptionsMap().get(product.getCategory().equals("groceries") ? 1 : product.getCategory().equals("electronics") ? 2 : 3);
-        Product addProduct = action.apply(product.getName(), product.getBasePrice(), product.isOnSale() ? "Y" : "N", product.getDiscountPercentage(), product.hasWarranty() ? "Y" : "N", 1);
+        SixParamFunction<String, Double, String, Integer, String, Integer> action = MenuOption.getTypeOptionsMap()
+                .get(product.getCategory().equals("groceries") ? 1 :
+                        product.getCategory().equals("electronics") ? 2 : 3);
+
+        Product addProduct = action.apply(product.getName(), product.getBasePrice(), product.isOnSale() ? "Y" : "N",
+                product.getDiscountPercentage(), product.hasWarranty() ? "Y" : "N", 1);
+
         cart.add(addProduct);
         Stock.removeItemStock(itemName, 1);
     }
@@ -49,8 +54,12 @@ public class Cart <T extends Product> {
         if(product.getQuantity() == 0) cart.remove(product);
 
         //Updating stock
-        SixParamFunction<String, Double, String, Integer, String, Integer> action= MenuOption.getTypeOptionsMap().get(product.getCategory().equals("groceries") ? 1 : product.getCategory().equals("electronics") ? 2 : 3);
-        Product stockProduct = action.apply(product.getName(), product.getBasePrice(), product.isOnSale() ? "Y" : "N", product.getDiscountPercentage(), product.hasWarranty() ? "Y" : "N", 1);
+        SixParamFunction<String, Double, String, Integer, String, Integer> action= MenuOption.getTypeOptionsMap().
+                get(product.getCategory().equals("groceries") ? 1 : product.getCategory().equals("electronics") ? 2 : 3);
+
+        Product stockProduct = action.apply(product.getName(), product.getBasePrice(), product.isOnSale() ? "Y" : "N",
+                product.getDiscountPercentage(), product.hasWarranty() ? "Y" : "N", 1);
+
         Stock.addItemStock(stockProduct);
 
 
@@ -66,39 +75,16 @@ public class Cart <T extends Product> {
 
         System.out.printf("\n%-20sR$%.2f%n", "TOTAL", total);
     }
-//
-//    private static CartItem getProduct(String itemName) {
-//        for(CartItem item : cart) {
-//            if(item.getName().equals(itemName)) {
-//                return item;
-//            }
-//        }
-//        return null;
-//    }
-//
-//    public static void sortCart(int sortOption) {
-//        switch (sortOption) {
-//            case 1:
-//                cart.sort((o1, o2)->o1.getName().compareTo(o2.getName()));
-//                break;
-//            case 2:
-//                cart.sort(Comparator.comparing(CartItem::getFinalPrice).reversed());
-//                break;
-//        }
-//    }
-//
+
     public static void printCart() {
         System.out.println("\n=========== Your Cart =============");
         Comparator<Product> comparator = Comparator.comparing(Product::getFinalPrice).reversed();
         cart.sort(comparator);
         cart.forEach((product) -> {
-                    for(int i=0; i<product.getQuantity(); i++) System.out.printf("%-20sR$%.2f%n", product.getName(), product.getFinalPrice());
+                    for(int i=0; i<product.getQuantity(); i++) System.out.printf("%-20sR$%.2f%n", product.getName(),
+                            product.getFinalPrice());
                 });
         calculateTotal();
-//        sortCart(sortOption);
-//        System.out.println("\n=========== Your Cart =============");
-//        calculateTotal();
-//        System.out.println("====================================");
     }
 
 

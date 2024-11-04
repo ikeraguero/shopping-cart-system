@@ -5,12 +5,14 @@ import com.shoppingcart.stock.Stock;
 
 
 public class Grocery extends Product{
-    public Grocery(String name, double basePrice, String isOnSale, int discountPercentage, String hasWarranty, int quantity) {
+    public Grocery(String name, double basePrice, String isOnSale,
+                   int discountPercentage, String hasWarranty, int quantity) {
         super(name, basePrice, isOnSale, discountPercentage, hasWarranty, quantity, "groceries");
         this.calculatePrice();
     }
 
-    public static Product createGrocery(String productName, double basePrice, String isOnSale, int discountPercentage, String hasWarranty, int quantity) {
+    public static Product createGrocery(String productName, double basePrice, String isOnSale,
+                                        int discountPercentage, String hasWarranty, int quantity) {
         return new Grocery(productName, basePrice, isOnSale, discountPercentage, hasWarranty,  quantity);
 
     }

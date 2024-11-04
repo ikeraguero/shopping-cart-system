@@ -41,7 +41,8 @@ public class MenuOption {
         quantity = 0;
     }
 
-    public static HashMap<Integer, SixParamFunction<String, Double, String, Integer, String, Integer>> getTypeOptionsMap() {
+    public static HashMap<Integer, SixParamFunction<String, Double, String, Integer, String, Integer>>
+    getTypeOptionsMap() {
         return typeOptionsMap;
     }
 
