@@ -1,7 +1,13 @@
 package com.shoppingcart.stock;
 
+import com.shoppingcart.MenuOption;
+import com.shoppingcart.SixParamFunction;
 import com.shoppingcart.product.Product;
+import org.postgresql.ds.PGConnectionPoolDataSource;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -110,5 +116,55 @@ public class Stock {
 
     public static boolean isEmpty() {
         return stock.isEmpty();
+    }
+
+    public static void loadDatabaseStock() {
+        // Connecting to DB
+
+        Properties props = new Properties();
+        try {
+            props.load(new FileInputStream("products.properties"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String url = props.getProperty("url");
+        String user = props.getProperty("username");
+        String password = props.getProperty("password");
+
+        var dataSource = new PGConnectionPoolDataSource();
+        dataSource.setUrl(url);
+
+
+        try(Connection connection = dataSource.getConnection(
+                user, password
+        ); Statement statement = connection.createStatement()) {
+
+            String sql = "SELECT * FROM shoppingsystem.products";
+            ResultSet rs = statement.executeQuery(sql);
+
+            ResultSetMetaData meta = rs.getMetaData();
+
+            for(int i=1; i<=meta.getColumnCount(); i++) {
+                System.out.printf("%-20s ", meta.getColumnName(i).toUpperCase());
+            }
+            while(rs.next()) {
+                String name = rs.getString(1).toUpperCase();
+                double price = rs.getDouble(2);
+                String isOnSale = rs.getString(3);
+                int discountPercentage = rs.getInt(4);
+                String hasWarranty = rs.getString(5);
+                String category = rs.getString(6);
+                int quantity = rs.getInt(7);
+
+                SixParamFunction<String, Double, String, Integer, String, Integer> action= MenuOption.getTypeOptionsMap().
+                        get(category.equals("groceries") ? 1 : category.equals("electronics") ? 2 : 3);
+
+                Product product = action.apply(name, price, isOnSale, discountPercentage, hasWarranty, quantity);
+                stock.add(product);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
