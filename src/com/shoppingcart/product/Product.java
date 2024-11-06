@@ -4,13 +4,14 @@ public abstract class Product {
     protected final String name;
     protected final double basePrice;
     protected double finalPrice;
-    protected String category;
+    protected final String category;
     protected final boolean isOnSale;
     protected final int discountPercentage;
     protected int quantity;
     protected boolean hasWarranty;
 
-    public Product(String productName, double basePrice, String isOnSale, int discountPercentage, String hasWarranty, int quantity, String category) {
+    public Product(String productName, double basePrice, String isOnSale, int discountPercentage, String hasWarranty,
+                   int quantity, String category) {
         this.name = productName;
         this.basePrice = basePrice;
         this.isOnSale = !isOnSale.equals("N");

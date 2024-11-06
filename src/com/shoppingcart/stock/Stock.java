@@ -1,17 +1,20 @@
 package com.shoppingcart.stock;
 
+import com.shoppingcart.Loadable;
 import com.shoppingcart.MenuOption;
 import com.shoppingcart.SixParamFunction;
+import com.shoppingcart.db.DatabaseUtils;
 import com.shoppingcart.product.Product;
 import org.postgresql.ds.PGConnectionPoolDataSource;
 
+import javax.xml.crypto.Data;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Stock {
+public class Stock implements Loadable {
     private static final HashMap<String, Integer> productQuantity = new HashMap<>();
     private static final List<Product> stock = new LinkedList<>();
 
@@ -20,6 +23,25 @@ public class Stock {
 
     //changed
     public static void addItemStock(Product item) {
+
+        String name = item.getName();
+        double price = item.getBasePrice();
+        String isOnSale = item.isOnSale() ? "Y" : "N";
+        int discountPercentage = item.getDiscountPercentage();
+        String hasWarranty = item.hasWarranty() ? "Y" : "N";
+        String category = item.getCategory();
+        int quantity = item.getQuantity();
+
+        Properties props = new Properties();
+        try {
+            props.load(new FileInputStream("products.properties"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String user = props.getProperty("username");
+        String password = props.getProperty("password");
+
+
         if(stock.stream()
                 .anyMatch(o->o.getName().equals(item.getName())))
         {
@@ -29,7 +51,21 @@ public class Stock {
                     .getFirst();
 
             product.setQuantity(product.getQuantity()+item.getQuantity());
+            try {
+                String sql = "UPDATE shoppingsystem.products SET quantity=? WHERE name=?";
+                DatabaseUtils.executeUpdate(sql, user, password, product.getQuantity(), product.getName());
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
             return;
+        }
+        try {
+            String sql = "INSERT INTO shoppingsystem.products (name, price, isonsale, discountpercentage, " +
+                    "haswarranty, category, quantity) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            DatabaseUtils.executeUpdate(sql, user, password, name, price, isOnSale, discountPercentage, hasWarranty,
+                    category, quantity);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
         stock.add(item);
     }
@@ -38,12 +74,39 @@ public class Stock {
     //changed
     public static void removeItemStock(String name, int option) {
         Product product = getProduct(name);
+        String sqlDelete = "DELETE FROM shoppingsystem.products WHERE name=?";
+        String sqlUpdate = "UPDATE shoppingsystem.products SET quantity=? WHERE name=?";
+
+        Properties props = new Properties();
+        try {
+            props.load(new FileInputStream("products.properties"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String user = props.getProperty("username");
+        String password = props.getProperty("password");
+
+
         switch (option) {
             case 1:
                 product.setQuantity(product.getQuantity()-1);
                 if(product.getQuantity() == 0) stock.remove(product);
+
+                try {
+                    DatabaseUtils.executeUpdate(sqlUpdate, user, password, product.getQuantity(), product.getName());
+                    if(product.getQuantity() == 0) {
+                        DatabaseUtils.executeUpdate(sqlDelete, user, password, product.getName());
+                    }
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
                 break;
             case 2:
+                try {
+                    DatabaseUtils.executeUpdate(sqlDelete, user, password, product.getName());
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
                 stock.remove(product);
                 break;
         }
@@ -118,53 +181,8 @@ public class Stock {
         return stock.isEmpty();
     }
 
-    public static void loadDatabaseStock() {
-        // Connecting to DB
-
-        Properties props = new Properties();
-        try {
-            props.load(new FileInputStream("products.properties"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String url = props.getProperty("url");
-        String user = props.getProperty("username");
-        String password = props.getProperty("password");
-
-        var dataSource = new PGConnectionPoolDataSource();
-        dataSource.setUrl(url);
-
-
-        try(Connection connection = dataSource.getConnection(
-                user, password
-        ); Statement statement = connection.createStatement()) {
-
-            String sql = "SELECT * FROM shoppingsystem.products";
-            ResultSet rs = statement.executeQuery(sql);
-
-            ResultSetMetaData meta = rs.getMetaData();
-
-            for(int i=1; i<=meta.getColumnCount(); i++) {
-                System.out.printf("%-20s ", meta.getColumnName(i).toUpperCase());
-            }
-            while(rs.next()) {
-                String name = rs.getString(1).toUpperCase();
-                double price = rs.getDouble(2);
-                String isOnSale = rs.getString(3);
-                int discountPercentage = rs.getInt(4);
-                String hasWarranty = rs.getString(5);
-                String category = rs.getString(6);
-                int quantity = rs.getInt(7);
-
-                SixParamFunction<String, Double, String, Integer, String, Integer> action= MenuOption.getTypeOptionsMap().
-                        get(category.equals("groceries") ? 1 : category.equals("electronics") ? 2 : 3);
-
-                Product product = action.apply(name, price, isOnSale, discountPercentage, hasWarranty, quantity);
-                stock.add(product);
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    public static void add(Product product) {
+        stock.add(product);
     }
+
 }

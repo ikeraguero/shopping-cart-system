@@ -80,10 +80,12 @@ public class MenuOption {
             }
             if(isOnSale.equals("Y")) {
                 System.out.print("Discount percentage (%): ");
-                try {
-                    discountPercentage = Integer.parseInt(scanner.next());
-                } catch (NumberFormatException _) {}
-                scanner.nextLine();
+                while(discountPercentage < 0) {
+                    try {
+                        discountPercentage = Integer.parseInt(scanner.next());
+                    } catch (NumberFormatException _) {}
+                    scanner.nextLine();
+                }
             }
             while(!hasWarranty.equals("Y") && !hasWarranty.equals("N") && category==2) {
                 if(!Stock.hasItem(productName)) {
