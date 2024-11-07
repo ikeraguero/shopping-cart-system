@@ -15,7 +15,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Stock implements Loadable {
-    private static final HashMap<String, Integer> productQuantity = new HashMap<>();
     private static final List<Product> stock = new LinkedList<>();
 
     public Stock() {

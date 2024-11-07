@@ -50,6 +50,3 @@ public class DatabaseUtils {
             return ps.executeQuery();
         }
     }
-    //getConnection
-    //executeUpdate
-    //exectueQuery
