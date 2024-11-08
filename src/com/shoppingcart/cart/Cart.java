@@ -64,7 +64,7 @@ public class Cart <T extends Product> implements Loadable {
                 throw new RuntimeException(e);
             }
             //Updating stock
-            Stock.removeItemStock(itemName, 1);
+            Stock.removeItemStock(itemName, "singleDeletion");
             return;
         }
 
@@ -86,7 +86,7 @@ public class Cart <T extends Product> implements Loadable {
                 product.getDiscountPercentage(), product.hasWarranty() ? "Y" : "N", 1);
 
         cart.add(addProduct);
-        Stock.removeItemStock(itemName, 1);
+        Stock.removeItemStock(itemName, "singleDeletion");
     }
 
     //changed

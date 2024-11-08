@@ -142,7 +142,7 @@ public class MenuOption {
                 deletionOption = Integer.parseInt(scanner.next());
                 scanner.nextLine();
             }
-            Stock.removeItemStock(newProductName, deletionOption);
+            Stock.removeItemStock(newProductName, deletionOption == 1 ? "singleDeletion" : "fullDeletion");
             System.out.println("Item successfully removed!");
             Stock.printStock(0);
             resetAllFields();

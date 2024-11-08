@@ -71,7 +71,7 @@ public class Stock implements Loadable {
 
 
     //changed
-    public static void removeItemStock(String name, int option) {
+    public static void removeItemStock(String name, String option) {
         Product product = getProduct(name);
         String sqlDelete = "DELETE FROM shoppingsystem.products WHERE name=?";
         String sqlUpdate = "UPDATE shoppingsystem.products SET quantity=? WHERE name=?";
@@ -87,10 +87,9 @@ public class Stock implements Loadable {
 
 
         switch (option) {
-            case 1:
+            case "singleDeletion":
                 product.setQuantity(product.getQuantity()-1);
                 if(product.getQuantity() == 0) stock.remove(product);
-
                 try {
                     DatabaseUtils.executeUpdate(sqlUpdate, user, password, product.getQuantity(), product.getName());
                     if(product.getQuantity() == 0) {
@@ -100,7 +99,7 @@ public class Stock implements Loadable {
                     throw new RuntimeException(e);
                 }
                 break;
-            case 2:
+            case "fullDeletion":
                 try {
                     DatabaseUtils.executeUpdate(sqlDelete, user, password, product.getName());
                 } catch (SQLException e) {
