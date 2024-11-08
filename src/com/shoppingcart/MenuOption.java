@@ -120,7 +120,7 @@ public class MenuOption {
         SixParamFunction<String, Double, String, Integer, String, Integer> action = typeOptionsMap.get(category);
         Product product = action.apply(productName, basePrice, isOnSale, discountPercentage, hasWarranty, quantity);
         Stock.addItemStock(product);
-        Stock.printStock(0);
+        Stock.printStock("byName");
         resetAllFields();
         System.out.print("\n ");
     }
@@ -144,7 +144,7 @@ public class MenuOption {
             }
             Stock.removeItemStock(newProductName, deletionOption == 1 ? "singleDeletion" : "fullDeletion");
             System.out.println("Item successfully removed!");
-            Stock.printStock(0);
+            Stock.printStock("byName");
             resetAllFields();
             return;
         }
@@ -164,7 +164,7 @@ public class MenuOption {
             System.out.print("Enter your choice: ");
             sortOption = Integer.parseInt(scanner.next());
         }
-        Stock.printStock(sortOption);
+        Stock.printStock(sortOption == 1? "byName" : "byPrice");
     }
 
     public static void printSearchItem(Scanner scanner) {
@@ -184,7 +184,7 @@ public class MenuOption {
             return;
         };
         String productToAdd = "";
-        Stock.printStock(0);
+        Stock.printStock("byName");
         while(productToAdd.isEmpty()) {
             System.out.print("Enter the name of the desired product: ");
             productToAdd = scanner.nextLine().toUpperCase();

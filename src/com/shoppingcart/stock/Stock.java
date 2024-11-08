@@ -149,10 +149,10 @@ public class Stock implements Loadable {
     }
 
     // changed
-    public static void printStock(int sortType) {
-        sortType = (sortType == 0 ? 1 : sortType);
+    public static void printStock(String sortType) {
+        sortType = (sortType.isEmpty() ? "byName" : "byPrice");
         String previousCategory = null;
-        Comparator<Product> comparator = (sortType == 1) ? Comparator.comparing(Product::getCategory)
+        Comparator<Product> comparator = (sortType.equals("byName")) ? Comparator.comparing(Product::getCategory)
                 .thenComparing(Product::getName)
                 : Comparator.comparing(Product::getCategory)
                 .thenComparing(Product::getFinalPrice).reversed();
